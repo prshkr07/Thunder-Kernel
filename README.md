@@ -6,32 +6,19 @@ Linux Kernel source code for the devices:
 * bq aquaris E5 FullHD
 
 
-BUILD INSTRUCTIONS?
-===================
+HOW TO USE IT
+=============
 
-Specific sources are separated by branches and each version is tagged with it's corresponding number. First, you should
-clone the project:
+Cd to de directory and run build.sh script.
+Select the device you want to build for:
 
-        $ git clone git@github.com:bq/aquaris-E5.git
+* bq aquaris E5 HD
+* bq aquaris E5 FullHD (WIP)
 
-After it, choose the version you would like to build:
+You will find the installable zip in ~/out directory.
 
-*Aquaris E5 HD*
+Big thanks to Dr-Shadow and dsixda.
 
-        $ cd aquaris-E5/
-        $ git checkout aquaris-E5
-
-*Aquaris E5 FHD*
-
-        $ cd aquaris-E5/
-        $ git checkout aquaris-E5FHD
-
-
-Finally, build the kernel according the next table of product names:
-
-| device                                                                                | product                                                               |
-| --------------------------|-------------------------|
-| bq aquaris E5 HD                                      | vegetahd                                      |
-| bq aquaris E5 Full HD                 | vegetafhd                     |
-
-        $ ./makeMtk -t {product} n k
+=====================================
+*   Copyright © suribi 2014/2015    *
+=====================================
