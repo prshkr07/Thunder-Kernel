@@ -748,7 +748,7 @@ MTK_FOTA_SUPPORT=no
 # Low cost phone using increasingly smaller  RAM size, the size of the SD card. Customers  can choose fsck_msdos_mtk to time for space.
 MTK_FSCK_MSDOS_MTK=no
 MTK_FSCK_TUNE=no
-MTK_FW_UPGRADE=yes
+MTK_FW_UPGRADE=no
 MTK_FW_UPGRADE_APP=no
 
 # Description: This option provides the build-time switch to turn on/off the entire Gallery3D app. Valid_value_list: yes - Gallery3D will be enabled and built into system image
@@ -896,7 +896,7 @@ MTK_LAUNCHER_ALLAPPSGRID=yes
 MTK_LAUNCHER_UNREAD_SUPPORT=yes
 
 # Feature option for app launch time improvement.In 72 projects, it should be set as "yes" defaultly.
-MTK_LAUNCH_TIME_OPTIMIZE=no
+MTK_LAUNCH_TIME_OPTIMIZE=yes
 MTK_LCA_RAM_OPTIMIZE=no
 MTK_LCA_ROM_OPTIMIZE=no
 MTK_LCEEFT_SUPPORT=yes
@@ -1384,8 +1384,8 @@ MTK_VIBSPK_SUPPORT=no
 MTK_VIDEOORB_APP=yes
 
 # support video record and playback to 1080p  resolution
-MTK_VIDEO_1080P=no
-MTK_VIDEO_4KH264_SUPPORT=no
+MTK_VIDEO_1080P=yes
+MTK_VIDEO_4KH264_SUPPORT=yes
 
 # Provide an option to enable/disable app widget:video favorites
 MTK_VIDEO_FAVORITES_WIDGET_APP=no #yes,modified by hailong.su 20140426
