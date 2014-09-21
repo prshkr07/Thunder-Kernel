@@ -11,7 +11,7 @@ ANDROID_JAVA_HOME=/opt/jdk1.6.0_45
 export ANDROID_JAVA_HOME
 
 # Overwrite PATH environment setting for JDK & arm-eabi if already exists
-PATH=$PWD/prebuilts/misc/linux-x86/ccache:/opt/jdk1.6.0_45/bin:$PWD/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.7/bin:$PWD/prebuilts/gcc/linux-x86/arm/arm-eabi-4.7/bin:$PWD/prebuilts/misc/linux-x86/make:$PATH
+PATH=/opt/jdk1.6.0_45/bin:$PWD/toolchain/arm-cortex_a7-linux-gnueabi/bin:$PATH
 export PATH
 
 # Add MediaTek developed Python libraries path into PYTHONPATH
