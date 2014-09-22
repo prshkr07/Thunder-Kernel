@@ -2,16 +2,21 @@
 set -e
 
 #AKB Version
-version=1.01
+version=1.02
+
+#Variables
 zImage_path=out/target/product/$TARGET_PRODUCT/obj/KERNEL_OBJ/arch/arm/boot/zImage
+Config_path=mediatek/config/mt6582/autoconfig/kconfig/platform
 
 #Calculate what version you are building. If this is your first build, it will show nothing in last version.
 if [ "$(ls -A `pwd`/.numero)" ]; then
 last_kversion=`cat .numero`
 current_kversion=$(echo "scale=1; $last_kversion+0.1" | bc)
+sed -i "s/_1.0.0/_1.$current_kversion/" `pwd`/$Config_path
 else
 last_kversion=nothing
 current_kversion=1.0
+sed -i "s/_1.0.0/_1.$current_kversion/" `pwd`/$Config_path
 fi
 
 while :
