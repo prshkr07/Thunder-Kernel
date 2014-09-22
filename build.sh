@@ -1,9 +1,18 @@
 #!/bin/bash
 set -e
 
-version=1.00
+#AKB Version
+version=1.01
+zImage_path=out/target/product/$TARGET_PRODUCT/obj/KERNEL_OBJ/arch/arm/boot/zImage
 
-clear
+#Calculate what version you are building. If this is your first build, it will show nothing in last version.
+if [ "$(ls -A `pwd`/.numero)" ]; then
+last_kversion=`cat .numero`
+current_kversion=$(echo "scale=1; $last_kversion+0.1" | bc)
+else
+last_kversion=nothing
+current_kversion=1.0
+fi
 
 while :
 do
@@ -15,12 +24,15 @@ do
 		echo "$ERR_MSG"
 		echo ""
 	fi
-
-  echo "======================================"
-  echo "    Automatic Kernel Builder - AKB    "
-  echo "            made by Suribi            "
-  echo "    Thanks to Dr-Shadow and dsixda    "
-  echo "======================================"
+  echo
+  echo "Last version: $last_kversion"
+  echo "Current version: $current_kversion"
+  echo
+  echo "========================================================"
+  echo "             Automatic Kernel Builder - AKB             "
+  echo "            made by Suribi - Copyright© 2014            "
+  echo "             Thanks to Dr-Shadow and dsixda             "
+  echo "========================================================"
   echo
   echo "Version: $version"
   echo
@@ -46,9 +58,35 @@ echo
 echo "You are actualy building for $TARGET_PRODUCT"
 echo
 
+DATE_START=$(date +"%s")
+BUILDVERSION=ThunderKernel-V$current_kversion-`date +%Y%m%d-%H%M`-$TARGET_PRODUCT
+
 #Build phase
 ./makeMtk -o=TARGET_BUILD_VARIANT=user -t  $TARGET_PRODUCT n k
+
+if [ "$(ls -A `pwd`/$zImage_path)" ]; then
 echo "Build Successful"
+else
+while [ ! -d "`pwd`/$zImage_path" ]; do
+	clear
+	echo "========================================================"
+	echo "       Oh no, there where some code errors :(           "
+	echo "   Now you must find and solve them, then press b       "
+	echo "========================================================"
+	echo
+	echo " b - Build again"
+	echo " x - exit"
+	echo
+	echo -n "Enter option: "
+	read option
+	
+	case $option in
+		b) ./makeMtk -o=TARGET_BUILD_VARIANT=user -t  $TARGET_PRODUCT n k; break;;
+		x) clear; echo; echo "Goodbye."; echo; exit 1;;
+		*) ERR_MSG="Invalid option!"; clear;;
+	esac
+done
+fi
 
 #Create vars for OUT, SCRIPTS and RAMDISK directories
 OUT_DIRECTORY=~/out/$TARGET_PRODUCT
@@ -82,14 +120,43 @@ rm -r $BOOT_PATH
 if [ -d "$SCRIPTS_DIRECTORY" ]; then
 echo "Repacking boot.img with new zImage"
 cp $SCRIPTS_DIRECTORY/* $OUT_DIRECTORY -R
-FLASHABLE_ZIP="$OUT_DIRECTORY/$TARGET_PRODUCT-3.4.67-ThunderKernel"
-FLASHABLE_ZIP_2="$TARGET_PRODUCT-3.4.67-ThunderKernel"
+FLASHABLE_ZIP="$OUT_DIRECTORY/$BUILDVERSION"
+FLASHABLE_ZIP_2="$BUILDVERSION"
 echo "Creating flashable at '$FLASHABLE_ZIP'.zip"
 pushd $OUT_DIRECTORY
 zip -r -0 "$FLASHABLE_ZIP_2".zip .
 popd
 if [ ! -d "$CERTIFICATES_DIRECTORY" ]; then
-echo "Warning ! We can't sign flashable.zip, you need to run ./certificates.sh"
+
+while :
+do
+clean
+echo "=========================================================================="
+echo " Warning ! We can't sign flashable.zip, you need to run ./certificates.sh"
+echo "          Now we will run it automatically if you press r:"
+echo "=========================================================================="
+echo
+echo " r: run ./certificates.sh (RECOMMENDED)"
+echo " x: exit, I will run it later."
+echo
+echo -n "Enter Option: "
+  read opt
+
+	case $opt in
+		r) clear; ./kernel/certificates.sh; break;;
+		x) clear; echo; echo "Goodbye."; echo; exit 1;;
+		*) ERR_MSG="Invalid option!"; clear;;
+	esac
+done
+
+clear
+echo
+echo "Now you have .certificates folder and we can continue"
+echo
+java -jar $SCRIPTS_DIRECTORY/../signapk.jar $CERTIFICATES_DIRECTORY/certificate.pem $CERTIFICATES_DIRECTORY/key.pk8 "$FLASHABLE_ZIP".zip "$FLASHABLE_ZIP"-signed.zip
+rm -r "$FLASHABLE_ZIP".zip $OUT_DIRECTORY/META-INF $OUT_DIRECTORY/boot.img
+mv "$FLASHABLE_ZIP"-signed.zip "$FLASHABLE_ZIP".zip
+
 else
 java -jar $SCRIPTS_DIRECTORY/../signapk.jar $CERTIFICATES_DIRECTORY/certificate.pem $CERTIFICATES_DIRECTORY/key.pk8 "$FLASHABLE_ZIP".zip "$FLASHABLE_ZIP"-signed.zip
 rm -r "$FLASHABLE_ZIP".zip $OUT_DIRECTORY/META-INF $OUT_DIRECTORY/boot.img
@@ -97,3 +164,17 @@ mv "$FLASHABLE_ZIP"-signed.zip "$FLASHABLE_ZIP".zip
 fi
 fi
 fi
+
+DATE_END=$(date +"%s")
+echo
+echo
+DIFF=$(($DATE_END - $DATE_START))
+echo "Last version: $last_kversion"
+echo "Current version: $current_kversion"
+
+#Now it's time to export current version
+echo "$current_kversion" > .numero
+
+echo
+echo
+echo "Build completed in $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds."
