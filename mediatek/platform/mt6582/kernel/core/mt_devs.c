@@ -1304,7 +1304,7 @@ void mt_fixup(struct tag *tags, char **cmdline, struct meminfo *mi)
 		}
 		if((serial_number == NULL) || (strlen(serial_number) == 0))
 	       {
-	           memcpy(serial_number, "0123456789ABCDEF", 16);
+	           memcpy(serial_number, "FUCK-BITCHES", 12);
 	       }
 		
         /* Use the default cmdline */
