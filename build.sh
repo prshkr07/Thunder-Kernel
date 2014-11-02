@@ -2,10 +2,9 @@
 set -e
 
 #AKB Version
-version=1.03
+version=1.1
 
 #Variables
-zImage_path=out/target/product/$TARGET_PRODUCT/obj/KERNEL_OBJ/arch/arm/boot/zImage
 Config_path=mediatek/config/mt6582/autoconfig/kconfig/platform
 
 #Calculate what version you are building. If this is your first build, it will show nothing in last version.
@@ -14,7 +13,7 @@ last_kversion=`cat .numero`
 current_kversion=$(echo "scale=1; $last_kversion+0.1" | bc)
 sed -i "s/_1.$last_version/_1.$current_kversion/" `pwd`/$Config_path
 else
-last_kversion=nothing
+last_kversion=none
 current_kversion=1.0
 sed -i "s/_1.0.0/_1.$current_kversion/" `pwd`/$Config_path
 fi
@@ -64,6 +63,7 @@ echo "You are actualy building for $TARGET_PRODUCT"
 echo
 
 DATE_START=$(date +"%s")
+zImage_path=out/target/product/$TARGET_PRODUCT/obj/KERNEL_OBJ/arch/arm/boot/zImage
 BUILDVERSION=ThunderKernel-V$current_kversion-`date +%Y%m%d-%H%M`-$TARGET_PRODUCT
 
 #Build phase
@@ -135,20 +135,20 @@ if [ ! -d "$CERTIFICATES_DIRECTORY" ]; then
 
 while :
 do
-clean
-echo "=========================================================================="
-echo " Warning ! We can't sign flashable.zip, you need to run ./certificates.sh"
-echo "          Now we will run it automatically if you press r:"
-echo "=========================================================================="
-echo
-echo " r: run ./certificates.sh (RECOMMENDED)"
-echo " x: exit, I will run it later."
-echo
-echo -n "Enter Option: "
+	clear
+	echo "=========================================================================="
+	echo " Warning ! We can't sign flashable.zip, you need to run ./certificates.sh"
+	echo "          Now we will run it automatically if you press r:"
+	echo "=========================================================================="
+	echo
+	echo " r: run ./certificates.sh (RECOMMENDED)"
+	echo " x: exit, I will run it later."
+	echo
+	echo -n "Enter Option: "
   read opt
 
 	case $opt in
-		r) clear; ./kernel/certificates.sh; break;;
+		r) clear; ./certificates.sh; break;;
 		x) clear; echo; echo "Goodbye."; echo; exit 1;;
 		*) ERR_MSG="Invalid option!"; clear;;
 	esac

@@ -1,5 +1,5 @@
 #!/bin/bash
-CERTIFICATES_DIRECTORY=../.certificates
+CERTIFICATES_DIRECTORY=~/.certificates
 
 if [ -d "$CERTIFICATES_DIRECTORY" ]; then
 echo "Certificates are already generated, get out of there or remove them manually"
